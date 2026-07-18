@@ -75,6 +75,28 @@ AUTO_START_SESSIONS=true
 
 Optional managed hosts with Docker: Railway, Fly.io, Render, DigitalOcean App Platform, a cheap VPS (Hetzner, Contabo, etc.).
 
+### Render (prefilled)
+
+This repo includes:
+
+| File | Use |
+|------|-----|
+| [`render.yaml`](../render.yaml) | Render Blueprint — disk + env (auto `BASE_URL` / `DOMAIN`) |
+| [`render.env`](../render.env) | Bulk-paste env in the Render dashboard |
+
+1. Render → **New → Blueprint** → select `collinsmathinji/OpenWA` (or **Web Service** + paste `render.env`)
+2. Attach disk at `/app/data` (Blueprint already does this; required on a **paid** plan)
+3. Replace `CORS_ORIGINS` with your real LAH URL (e.g. `https://lah.vercel.app`)
+4. After deploy, open the service URL → create session → scan QR → create API key
+5. Point LAH / Vercel at that URL:
+
+```env
+WHATSAPP_PROVIDER=openwa
+OPENWA_BASE_URL=https://YOUR-SERVICE.onrender.com
+OPENWA_API_KEY=…
+OPENWA_SESSION_ID=…
+```
+
 ## 3. Wire LAH (other repo)
 
 In `C:\Users\macha\Desktop\LAH\.env.local` (and Vercel project env):

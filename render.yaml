@@ -1,0 +1,64 @@
+# OpenWA on Render — Blueprint
+# Docs: https://render.com/docs/blueprint-spec
+#
+# 1. In Render: New → Blueprint → connect collinsmathinji/OpenWA
+# 2. After first deploy, open the service URL, create session + scan QR + API key
+# 3. Set OPENWA_* on LAH (Vercel) to this service URL
+#
+# Requires a paid plan for persistent disk (WhatsApp session storage).
+
+services:
+  - type: web
+    name: openwa
+    runtime: docker
+    plan: starter
+    region: oregon
+    healthCheckPath: /api/health/ready
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    autoDeployTrigger: commit
+    disk:
+      name: openwa-data
+      mountPath: /app/data
+      sizeGB: 2
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "2785"
+      # Auto-filled from Render's public URL after the service exists
+      - key: BASE_URL
+        fromService:
+          name: openwa
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: DOMAIN
+        fromService:
+          name: openwa
+          type: web
+          envVarKey: RENDER_EXTERNAL_HOSTNAME
+      # Replace with your real LAH Vercel URL (keep localhost for local dev)
+      - key: CORS_ORIGINS
+        value: https://your-lah.vercel.app,http://localhost:3000
+      - key: AUTO_START_SESSIONS
+        value: "true"
+      - key: DATABASE_TYPE
+        value: sqlite
+      - key: DATABASE_NAME
+        value: ./data/openwa.sqlite
+      - key: SESSION_DATA_PATH
+        value: ./data/sessions
+      - key: STORAGE_TYPE
+        value: local
+      - key: STORAGE_LOCAL_PATH
+        value: ./data/media
+      - key: REDIS_ENABLED
+        value: "false"
+      - key: QUEUE_ENABLED
+        value: "false"
+      - key: CACHE_ENABLED
+        value: "false"
+      - key: PUPPETEER_HEADLESS
+        value: "true"
+      - key: PUPPETEER_ARGS
+        value: --no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage,--disable-gpu
