@@ -375,6 +375,7 @@ Comprehensive documentation is available in the `docs/` folder:
 | [API Spec](./docs/06-api-specification.md)              | Complete API reference       |
 | [Development](./docs/08-development-guidelines.md)      | Coding standards             |
 | [Migration Guide](./docs/14-migration-guide.md)         | Database & storage migration |
+| [LAH integration](./docs/24-lah-integration.md)         | Connect a separate Next.js app (e.g. Vercel) via API |
 
 ---
 
